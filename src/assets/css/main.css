@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+    font-family: Arial;
+}
+
+.header {
+    text-align: center;
+    padding: 32px;
+}
+
+.navbar-light {
+  color: #5C945850;
+}
+
+/*banner*/
+.banner-area {
+  background: url(../img/banner.jpg) no-repeat center center/cover;
+  height: 600px;
+}
+
+.banner-content{
+  margin-top: 100px;
+}
+.nav-link {
+  color: #fff;
+}
