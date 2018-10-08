@@ -35,6 +35,7 @@ export default class TodoList extends Vue {
 
 
     private selectedTodo: string;
+    private selectedCategory: any;
     private todos: any[];
 
     constructor() {
@@ -42,15 +43,19 @@ export default class TodoList extends Vue {
 
         this.selectedTodo = "";
         this.todos = [];
+        this.selectedCategory = null;
 
-        this.getTodos();
+        this.$root.$on("onSelCategoryChanged", this.onSelCategoryChanged);
     }
 
     private getTodos() {
 
-        const query = `*[_type == "todo"]`;
+        var query:string = `*[_type == "todo"]`;
+        if(this.selectedCategory){
+            query = `*[_type == "todo" && references('${this.selectedCategory._id}')]`;
+        }
 
-        this.todos = [];
+        console.log("query: " + query);
 
         sanity.fetch(query, {}).then(todos => {
             this.todos = todos;
@@ -60,12 +65,19 @@ export default class TodoList extends Vue {
                 this.selectedTodo = todos[0].title;
             }
         }, error => {
-            console.log("got error !");
+            console.log("got error:: " + error);
         });
     }
 
     private changeTodo(todo: string) {
         this.selectedTodo = todo;
+    }
+
+    private onSelCategoryChanged(category: any) {
+        console.log(`selected category: ${category.title}`);
+        console.log(`selected category: ${category._id}`);
+        this.selectedCategory = category;
+        this.getTodos();
     }
 
 }
