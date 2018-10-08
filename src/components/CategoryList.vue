@@ -41,6 +41,7 @@ export default class CategoryList extends Vue {
             // if no category is selected, select first one as default
             if(this.selectedCategory == "" && this.categories.length > 0) {
                 this.selectedCategory = categories[0];
+                this.changeCategory(this.selectedCategory);
             }
         }, error => {
             console.log("got error !");
