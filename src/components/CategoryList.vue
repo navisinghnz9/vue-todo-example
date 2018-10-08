@@ -2,8 +2,8 @@
     <div class="container">
         <ul class="list-group" v-for="category in categories">
             <li class="list-group-item" 
-                v-bind:class="{active: category.title == selectedCategory}"
-                @click="changeCategory(category.title)">
+                v-bind:class="{active: category._id == selectedCategory._id}"
+                @click="changeCategory(category)">
                 {{ category.title }}
             </li>
         </ul>
@@ -17,7 +17,7 @@ import sanity from '../sanity';
 @Component({})
 export default class CategoryList extends Vue {
 
-    private selectedCategory: string;
+    private selectedCategory: any;
     private categories: any[];
 
     constructor() {
@@ -31,7 +31,7 @@ export default class CategoryList extends Vue {
 
     private getAllCategories() {
 
-        const query = `*[_type == "category"]`;
+        const query = `*[_type == "category"] | order(title)`;
 
         this.categories = [];
 
@@ -40,15 +40,16 @@ export default class CategoryList extends Vue {
 
             // if no category is selected, select first one as default
             if(this.selectedCategory == "" && this.categories.length > 0) {
-                this.selectedCategory = categories[0].title;
+                this.selectedCategory = categories[0];
             }
         }, error => {
             console.log("got error !");
         });
     }
 
-    private changeCategory(category: string) {
+    private changeCategory(category: any) {
         this.selectedCategory = category;
+        this.$root.$emit('onSelCategoryChanged', this.selectedCategory);
     }
 }
 </script>
