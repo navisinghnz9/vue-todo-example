@@ -12,19 +12,17 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import sanity from '../sanity';
+import sanity from '@/sanity';
+import Category from '@/models/Category';
 
 @Component({})
 export default class CategoryList extends Vue {
 
-    private selectedCategory: any;
-    private categories: any[];
+    private selectedCategory: Category | null = null;
+    private categories: Category[] = [];
 
     constructor() {
         super();
-
-        this.selectedCategory = "";
-        this.categories = [];
 
         this.getAllCategories();
     }
@@ -35,20 +33,20 @@ export default class CategoryList extends Vue {
 
         this.categories = [];
 
-        sanity.fetch(query, {}).then(categories => {
+        sanity.fetch(query, {}).then( (categories: Category[]) => {
             this.categories = categories;
 
             // if no category is selected, select first one as default
-            if(this.selectedCategory == "" && this.categories.length > 0) {
+            if (this.selectedCategory == null && this.categories.length > 0) {
                 this.selectedCategory = categories[0];
                 this.changeCategory(this.selectedCategory);
             }
-        }, error => {
-            console.log("got error !");
+        }, (error: any) => {
+            console.error(`CategoryList :: got error:: ${error}`);
         });
     }
 
-    private changeCategory(category: any) {
+    private changeCategory(category: Category) {
         this.selectedCategory = category;
         this.$root.$emit('onSelCategoryChanged', this.selectedCategory);
     }
