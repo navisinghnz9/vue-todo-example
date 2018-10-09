@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import Category from '@/models/Category'
-import Todo from '@/models/Todo'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import Category from '@/models/Category';
+import Todo from '@/models/Todo';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -12,16 +12,16 @@ export default new Vuex.Store({
   },
   mutations: {
 
-      setSelectedCategory(state:any, category: Category){
+      setSelectedCategory(state: any, category: Category) {
           state.selectedCategory = category;
       },
 
-      setTodos(state:any, todos: Todo){
+      setTodos(state: any, todos: Todo) {
           state.todos = todos;
-      }
+      },
 
   },
   actions: {
 
-  }
-})
+  },
+});
