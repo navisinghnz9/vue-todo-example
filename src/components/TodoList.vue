@@ -69,7 +69,7 @@ export default class TodoList extends Vue {
         this.selectedTodo = todo;
     }
 
-    private onSelCategoryChanged(category: any) {
+    private onSelCategoryChanged(category: Category) {
         this.selectedCategory = category;
         this.getTodos();
     }
