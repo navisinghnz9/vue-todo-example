@@ -36,42 +36,17 @@ import Todo from '@/models/Todo';
 export default class TodoList extends Vue {
 
     private selectedTodo: Todo | null = null;
-    private selectedCategory: Category | null = null;
-    private todos: Todo[] = [];
 
-    constructor() {
-        super();
-
-        this.$root.$on('onSelCategoryChanged', this.onSelCategoryChanged);
+    get selectedCategory(): Category{
+        return this.$store.state.selectedCategory;
     }
 
-    private getTodos() {
-
-        let query: string = `*[_type == "todo"]`;
-        if (this.selectedCategory) {
-            query = `*[_type == "todo" && references('${this.selectedCategory._id}')]`;
-        }
-
-        sanity.fetch(query, {}).then( (todos: Todo[]) => {
-
-            this.todos = todos;
-
-            // if no todo is selected, select first one as default
-            if (this.selectedTodo == null && this.todos.length > 0) {
-                this.selectedTodo = todos[0];
-            }
-        }, (error: any) => {
-            console.error(`TodoList :: got error:: ${error}`);
-        });
+    get todos(): Todo[] {
+        return this.$store.state.todos;
     }
 
     private changeTodo(todo: Todo) {
         this.selectedTodo = todo;
-    }
-
-    private onSelCategoryChanged(category: Category) {
-        this.selectedCategory = category;
-        this.getTodos();
     }
 
 }

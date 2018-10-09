@@ -18,13 +18,16 @@ import Category from '@/models/Category';
 @Component({})
 export default class CategoryList extends Vue {
 
-    private selectedCategory: Category | null = null;
     private categories: Category[] = [];
 
     constructor() {
         super();
 
         this.getAllCategories();
+    }
+
+    get selectedCategory(): Category{
+        return this.$store.state.selectedCategory;
     }
 
     private getAllCategories() {
@@ -34,21 +37,36 @@ export default class CategoryList extends Vue {
         this.categories = [];
 
         sanity.fetch(query, {}).then( (categories: Category[]) => {
-            this.categories = categories;
-
             // if no category is selected, select first one as default
-            if (this.selectedCategory == null && this.categories.length > 0) {
-                this.selectedCategory = categories[0];
-                this.changeCategory(this.selectedCategory);
+            if (this.selectedCategory == null && categories.length > 0) {
+                this.changeCategory(categories[0]);
             }
+
+            this.categories = categories;
         }, (error: any) => {
             console.error(`CategoryList :: got error:: ${error}`);
         });
     }
 
     private changeCategory(category: Category) {
-        this.selectedCategory = category;
-        this.$root.$emit('onSelCategoryChanged', this.selectedCategory);
+        this.$store.commit('setSelectedCategory', category);
+        this.fetchTodos();
     }
+
+    private fetchTodos() {
+
+        let query: string = `*[_type == "todo"]`;
+        if (this.selectedCategory) {
+            query = `*[_type == "todo" && references('${this.selectedCategory._id}')]`;
+        }
+
+        return sanity.fetch(query, {}).then( (todos: Todo[]) => {
+            this.$store.commit('setTodos', todos);
+        }, (error: any) => {
+            console.error(`TodoList :: got error:: ${error}`);
+            this.$store.commit('setTodos', []);
+        });
+    }
+
 }
 </script>

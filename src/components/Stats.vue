@@ -22,19 +22,8 @@ import Category from '@/models/Category';
 @Component({})
 export default class Stats extends Vue {
 
-    private selectedCategory: Category | null = null;
-
-
-    constructor() {
-        super();
-
-        this.$root.$on('onSelCategoryChanged', this.onSelCategoryChanged);
-    }
-
-
-    private onSelCategoryChanged(category: Category) {
-        console.log("Stats :: category:", category);
-        this.selectedCategory = category;
+    get selectedCategory(): Category{
+        return this.$store.state.selectedCategory;
     }
 
 }
